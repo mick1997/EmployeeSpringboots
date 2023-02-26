@@ -1,9 +1,9 @@
 package com.snva.employeespringboots.controller;
 
 import com.snva.employeespringboots.model.Employee;
-import com.snva.employeespringboots.repository.EmployeeRepository;
-import com.snva.employeespringboots.service.EmployeeService;
+import com.snva.employeespringboots.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
@@ -15,19 +15,20 @@ import java.util.List;
 public class EmployeeController {
 
     @Autowired
-    private EmployeeRepository  employeeRepository;
+    private IEmployeeService employeeService;
 
-    @Autowired
-    private EmployeeService employeeService;
-
-    @GetMapping("/employee")
+    @GetMapping("/employees")
     public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+        return employeeService.findAll();
     }
 
     @PostMapping("/addemployee")
-    public Employee createEmployee(@Valid @RequestBody Employee employee) {
-        employee.setId(employeeService.createEmployee(Employee.SEQUENCE_NAME));
-        return employeeRepository.save(employee);
+    public ResponseEntity createEmployee(@Valid @RequestBody Employee employee) {
+        try {
+            return ResponseEntity.ok(employeeService.save(employee));
+        }
+        catch (Exception e) {
+            return ResponseEntity.ok("Duplicate Entity exist: " + e.getMessage());
+        }
     }
 }

@@ -22,10 +22,8 @@ import java.util.Set;
 @Document(collection = "employee")
 public class Employee {
 
-    @Transient
-    public static final String SEQUENCE_NAME = "users_sequence";
     @Id
-    private long id;
+    private String id;
     @NotBlank
     @Size(max = 100)
     @Indexed(unique = true)
@@ -33,6 +31,6 @@ public class Employee {
     private String lastName;
     @NotBlank
     @Size(max = 100)
-    @Indexed(unique = true)
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     private String email;
 }

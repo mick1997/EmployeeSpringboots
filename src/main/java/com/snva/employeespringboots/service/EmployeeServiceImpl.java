@@ -1,25 +1,23 @@
 package com.snva.employeespringboots.service;
 
-import com.snva.employeespringboots.model.DatabaseSequence;
 import com.snva.employeespringboots.model.Employee;
 import com.snva.employeespringboots.repository.EmployeeRepository;
+import com.snva.employeespringboots.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
-
-@Component
-public class EmployeeServiceImpl implements EmployeeService {
+@Service
+public class EmployeeServiceImpl implements IEmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private MongoOperations mongoOperations;
@@ -44,10 +42,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public long createEmployee(String seqName) {
-        DatabaseSequence counter = mongoOperations.findAndModify(query(where("_id").is(seqName)),
-                new Update().inc("seq",1), options().returnNew(true).upsert(true),
-                DatabaseSequence.class);
-        return !Objects.isNull(counter) ? counter.getSeq() : 1;
+    public List<Employee> findAll() {
+        return employeeRepository.findAll();
+    }
+
+    @Override
+    public Employee save(Employee employee) throws Exception {
+        Employee emp = employeeRepository.findEmployeeByEmail(employee.getEmail());
+        if (emp != null) {
+            throw new Exception("Employee email is already exist: " + employee.getEmail());
+        }
+        return employeeRepository.save(employee);
     }
 }

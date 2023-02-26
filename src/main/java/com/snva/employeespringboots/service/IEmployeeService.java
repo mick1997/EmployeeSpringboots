@@ -2,7 +2,9 @@ package com.snva.employeespringboots.service;
 
 import com.snva.employeespringboots.model.Employee;
 
-public interface EmployeeService {
+import java.util.List;
+
+public interface IEmployeeService {
 
     /***
      * Register a new Employee
@@ -19,9 +21,16 @@ public interface EmployeeService {
     String findEmployeeByEmail(String email);
 
     /**
-     * Create a new Employee
-     * @param SeqName
+     * Find all Employee
      * @return
      */
-    long createEmployee(String SeqName);
+    List<Employee> findAll();
+
+    /**
+     * Save the employee
+     * @param employee
+     * @return
+     * @throws Exception
+     */
+    Employee save(Employee employee) throws Exception;
 }

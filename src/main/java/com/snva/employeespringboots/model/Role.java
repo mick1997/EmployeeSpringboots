@@ -17,7 +17,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Role {
     @Id
     private String id;
-
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     private String role;
 }
